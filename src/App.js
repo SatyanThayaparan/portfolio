@@ -121,6 +121,29 @@ function App() {
                 </div>
               </section>
             )}
+
+            {/*
+
+                Client ID: REDACTED_LINKEDIN_CLIENT_ID
+                Client Secret: >REDACTED_LINKEDIN_CLIENT_SECRET=
+
+                Redirect link: http://localhost:3000/callback
+
+                https://www.linkedin.com/developers/tools/oauth/redirect
+
+                https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=REDACTED_LINKEDIN_CLIENT_ID&redirect_uri=http://localhost:3000/callback/=r_liteprofile%20r_emailaddress
+
+                GET https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=REDACTED_LINKEDIN_CLIENT_ID&redirect_uri=https://www.linkedin.com/developers/tools/oauth/redirect&scope=liteprofile%20emailaddress%20w_member_social
+
+                token: AQUzMetlcAQtrqret3zytPChUqPLnwq-Z9ELrhWP3TgYbQPquyK1uXRDrRV1Ida33P7JyHIj9fJymGSlyz7NWjyXbLAFzlrgFJFdFNwwzskKzaHPqyEu9maqLei3rTnl4mb95YeuAsUeqOqxEXifez8FzNbxGXSqQ_riS5ziB54HHAcKN546rp8HpuCIigLUHvp1LpCmYj0RgW5qhQBKolJE-A1PaqeND3MQISPLNnTqmCMoJMg76eR6zPOKzhuuXtBbwO50y8D45N206zWaFoEjERDLTfoYt8Ds-hOIAHmZsmT7EI2WcC6umNn6r8EBdztMVTXfDZ-_8gZ9ciLwEDXeRRZn4Q
+
+
+https://satyanthayaparan-portfolio.vercel.app/api/auth/linkedin/callback
+
+            */}
+      
+
+
           </motion.div>
         </AnimatePresence>
       </main>
@@ -128,3 +151,5 @@ function App() {
   );
 }
 export default App;
+
+
