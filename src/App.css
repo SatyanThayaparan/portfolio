@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Inter:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Domine:wght@300;400;600&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@300;400;600&family=Poiret+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poiret+One&family=JetBrains+Mono:wght@300;400;600&display=swap');
+
 
 html, body {
   margin: 0;
@@ -20,70 +22,118 @@ body {
 }
 
 /* Sidebar styles */
+
+aside {
+  width: 250px;
+  padding-right: 1px;
+}
+
 .sidebar {
   width: 250px;
-  background-color: #1a1a1a;
-  padding: 20px;
+  background-color: #FAF9F6;
   text-align: center;
   position: fixed;
   left: 0;
   top: 0;
   bottom: 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'JetBrains Mono', monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.sidebar h2 {
-  color: #a855f7;
+.profile-container {
+  width: 100%;
+  text-align: center;
+  position: relative;
+}
+
+.profile-pic {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  display: block;
+}
+
+.profile-name {
+  position: absolute;
+  bottom: 0;
+  margin-bottom: auto;
+  left: 0;
+  width: 100%;
+  background-color: rgba(255, 179, 71, 0.7); /* Pastel orange with 0.4 opacity */
+  color: white;
   font-weight: 600;
+  padding: 8px 0;
+  font-family: 'Poiret One', cursive;
+  text-align: center;
+}
+
+.sidebar nav{
+  width: 100%;
+  padding-right: 1px;
 }
 
 .sidebar ul {
   list-style: none;
   padding: 0;
+  width: 100%;
 }
 
 .sidebar ul li {
-  margin: 10px 0;
+  margin: 0;
+  width: 100%;
 }
 
 .sidebar ul li button {
   background: none;
   border: none;
-  color: white;
+  border-bottom: 1px solid #D3D3D3; /* Only one line between buttons */
+  color: #D3D3D3;
   font-size: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 10px;
-  transition: color 0.3s ease-in-out;
-  font-family: 'Poppins', sans-serif;
+  transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+  font-family: 'JetBrains Mono', monospace;
+  width: 100%;
+  padding: 15px 20px;  /* Left padding aligns with "Satyan" */
+  text-align: left;  /* Ensures text & icon align left */
+}
+
+.sidebar ul li:last-child button {
+  border-bottom: none; /* Remove border from last button */
 }
 
 .sidebar ul li button:hover, .sidebar ul li button.active {
-  color: #a855f7;
+  color: #FFB347;
+  background-color: rgba(255, 179, 71, 0.1); /* Light pastel orange hover effect */
 }
 
-.profile-pic {
-  width: 100px;
-  border-radius: 50%;
-  margin-bottom: 10px;
+.sidebar ul li button svg {
+  font-size: 20px; /* Slightly larger icons */
+}
+
+hr {
+  width: 100%;
+  border: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0;
 }
 
 .content {
   flex-grow: 1;
-  padding: 40px;
-  margin-left: 250px;
+  margin-left: 200px;
+  margin-right: 200px;
   background-size: cover;
   background-position: center;
   min-height: 100vh;
 }
 
-h1, h2, h3 {
-  font-family: 'Poppins', sans-serif;
-}
-
-p {
-  font-family: 'Inter', sans-serif;
+h1, h2, h3 {  
+  font-family: 'Poiret One', cursive;
 }
 
 .section-content {
@@ -99,7 +149,14 @@ p {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  margin-left: 250px;
+}
+
+.home-title {
+  font-size: 3.5rem;  /* Increased font size */
+  font-weight: bold;
+  font-family: 'Poiret One', cursive;
+  line-height: 1; /* Adjusts spacing */
+  display: inline-block;
 }
 
 .home-img {
@@ -133,5 +190,21 @@ p {
 }
 
 .highlight {
-  color: #a855f7;
+  color: #FFB347 ;
 }
+
+/* Typed Text Styles */
+.typed-text {
+  font-size: 1.8rem;
+  font-family: 'JetBrains Mono', monospace; /* Use JetBrains Mono */
+  font-weight: bold;
+  color: white;
+  margin-top: 0px; /* Reduce space between typed text and title */
+  position: relative;
+}
+
+.typed-text span {  /* Underline effect on deleted text */
+  text-decoration: underline;
+  text-decoration-color: #FFB347;
+}
+

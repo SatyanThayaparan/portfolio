@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaHome, FaUser, FaFileAlt, FaBriefcase, FaEnvelope } from "react-icons/fa";
+import { PiHouseBold, PiUserBold, PiFileTextBold, PiBriefcaseBold, PiEnvelopeBold } from "react-icons/pi";
+import { ReactTyped } from "react-typed"; 
+
+import satyan from "./assets/satyan.jpeg";
+import city from "./assets/Toronto.jpg";
 import "./App.css";
 
 function App() {
@@ -16,15 +20,17 @@ function App() {
   return (
     <div className="App">
       <aside className="sidebar">
-        <img src="https://picsum.photos/200/200" alt="Profile" className="profile-pic" />
-        <h2>Satyan Thayaparan</h2>
+        <div className="profile-container">
+          <img src={satyan} alt="Profile" className="profile-pic" />
+          <h2 className="profile-name">Satyan Thayaparan</h2>
+        </div>
         <nav>
-          <ul>
-            <li><button onClick={() => setActiveSection("home")} className={activeSection === "home" ? "active" : ""}><FaHome /> Home</button></li>
-            <li><button onClick={() => setActiveSection("about")} className={activeSection === "about" ? "active" : ""}><FaUser /> About</button></li>
-            <li><button onClick={() => setActiveSection("resume")} className={activeSection === "resume" ? "active" : ""}><FaFileAlt /> Resume</button></li>
-            <li><button onClick={() => setActiveSection("portfolio")} className={activeSection === "portfolio" ? "active" : ""}><FaBriefcase /> Portfolio</button></li>
-            <li><button onClick={() => setActiveSection("contact")} className={activeSection === "contact" ? "active" : ""}><FaEnvelope /> Contact</button></li>
+          <ul className="nav-links">
+            <li><button onClick={() => setActiveSection("home")} className={activeSection === "home" ? "active" : ""}><PiHouseBold /> Home</button></li>
+            <li><button onClick={() => setActiveSection("about")} className={activeSection === "about" ? "active" : ""}><PiUserBold /> About</button></li>
+            <li><button onClick={() => setActiveSection("resume")} className={activeSection === "resume" ? "active" : ""}><PiFileTextBold /> Resume</button></li>
+            <li><button onClick={() => setActiveSection("portfolio")} className={activeSection === "portfolio" ? "active" : ""}><PiBriefcaseBold /> Portfolio</button></li>
+            <li><button onClick={() => setActiveSection("contact")} className={activeSection === "contact" ? "active" : ""}><PiEnvelopeBold /> Contact</button></li>
           </ul>
         </nav>
       </aside>
@@ -53,17 +59,37 @@ function App() {
                         shape: { type: "circle" },
                         opacity: { value: 0.5 },
                         size: { value: 3 },
-                        move: { enable: true, speed: 1 },
-                        links: { enable: true, color: "#a855f7", opacity: 0.5 }
+                        move: { enable: true, speed: 5 },
+                        links: { enable: true, color: "#FFB347", opacity: 0.5 }
                       }
                     }}
                     className="particles"
                   />
                   
-                  <img src="https://picsum.photos/1920/1080" alt="Technology Background" className="home-img" />
+                  <img src={city} alt="Technology Background" className="home-img" />
                   <div className="home-overlay">
                     <h1>Satyan <span className="highlight">Thayaparan</span></h1>
-                    <p>I am a Software Developer</p>
+
+                    {/* Animated Typing Effect */}
+                    <div className="typed-text">
+                      I am a{" "}
+                      <ReactTyped
+                        strings={[
+                          "<span class='typed-highlight'>Freelancer</span>",
+                          "<span class='typed-highlight'>Software Engineer</span>",
+                          "<span class='typed-highlight'>DevOps Specialist</span>",
+                          "<span class='typed-highlight'>Fullstack Developer</span>"
+                        ]}
+                        typeSpeed={100}
+                        backSpeed={50}
+                        backDelay={1000}
+                        loop
+                        showCursor={true}
+                        cursorChar="|"
+                        className="typed-highlight"
+                      />
+                    </div>
+
                   </div>
                 </div>
               </section>
