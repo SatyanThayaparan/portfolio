@@ -1,6 +1,93 @@
 @import url('https://fonts.googleapis.com/css2?family=Domine:wght@300;400;600&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@300;400;600&family=Poiret+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poiret+One&family=JetBrains+Mono:wght@300;400;600&display=swap');
 
+/***** MOBILE STYLES *****/
+
+@media (max-width: 768px) {
+
+  /* 📌 Sidebar */
+  .sidebar {
+    width: 0; /* Hide sidebar by default */
+    overflow: hidden;
+    padding: 10px 0;
+    transition: 0.3s;
+  }
+
+  .sidebar.open {
+    width: 200px;
+    padding: 10px;
+  }
+
+  .profile-container {
+    display: none; /* Hide profile picture on mobile */
+  }
+
+  .sidebar ul {
+    padding: 5px;
+  }
+
+  .sidebar ul li {
+    text-align: center;
+  }
+
+  .sidebar ul li button {
+    font-size: 12px;
+    justify-content: center;
+    padding: 8px;
+  }
+
+  .menu-toggle {
+    display: block;  /* Make the button visible */
+  }
+
+  /* 📌 Main Content Adjustments */
+  .content {
+    margin-left: 80px; /* Adjust for collapsed sidebar */
+  }
+
+  /* 📌 Home Page Adjustments */
+  .home-title {
+    font-size: 2rem; /* Reduce size for mobile */
+  }
+
+  .typed-text {
+    font-size: 1rem; /* Reduce typing text size */
+    text-align: center;
+  }
+
+  /* 📌 Background Image Scaling */
+  .home-img {
+    height: 100vh;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .home-overlay {
+    width: 90%;
+    text-align: center;
+  }
+}
+
+/* For very small screens (mobile phones) */
+@media (max-width: 480px) {
+  .sidebar {
+    width: 60px;
+  }
+
+  .content {
+    margin-left: 60px;
+  }
+
+  .home-title {
+    font-size: 1.8rem;
+  }
+
+  .typed-text {
+    font-size: 0.9rem;
+  }
+}
+
+/***** WEB APP STYLES FOR BIGGER SCREENS *****/
 
 html, body {
   margin: 0;
@@ -42,10 +129,29 @@ aside {
   align-items: center;
 }
 
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 10px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+
 .profile-container {
   width: 100%;
   text-align: center;
-  position: relative;
+}
+
+/* Hide Profile Picture on Mobile */
+@media (max-width: 768px) {
+  .profile-container {
+    display: none;
+  }
 }
 
 .profile-pic {
@@ -75,6 +181,7 @@ aside {
 }
 
 .sidebar ul {
+  margin-top: auto;
   list-style: none;
   padding: 0;
   width: 100%;
@@ -102,9 +209,6 @@ aside {
   text-align: left;  /* Ensures text & icon align left */
 }
 
-.sidebar ul li:last-child button {
-  border-bottom: none; /* Remove border from last button */
-}
 
 .sidebar ul li button:hover, .sidebar ul li button.active {
   color: #FFB347;
@@ -123,10 +227,37 @@ hr {
   margin: 0;
 }
 
+/* Social Icons Container */
+.social-icons-container {
+  width: 100%;
+  padding: 10px 0;
+  margin-bottom: 0;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: flex-start;
+  gap: 15px;
+  padding-left: 20px;
+}
+
+.social-icon {
+  font-size: 20px;
+  color: #D3D3D3;
+  transition: color 0.3s ease-in-out;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.social-icon:hover {
+  color: #FFB347;
+}
+
 .content {
   flex-grow: 1;
-  margin-left: 200px;
-  margin-right: 200px;
+  margin-left: 250px;
+  margin-right: 250px;
   background-size: cover;
   background-position: center;
   min-height: 100vh;
@@ -160,8 +291,8 @@ h1, h2, h3 {
 }
 
 .home-img {
-  position: absolute;
-  width: 100%;
+  position: relative;
+  width: calc(100vw - 250px);
   height: 100%;
   object-fit: cover;
   top: 0;
@@ -179,6 +310,7 @@ h1, h2, h3 {
 
 .home-overlay {
   position: absolute;
+  width: calc(100vw - 250px);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
