@@ -1,0 +1,10 @@
+{
+    "version": 2,
+    "builds": [
+      { "src": "api/linkedin.js", "use": "@vercel/node" }
+    ],
+    "routes": [
+      { "src": "/api/auth/linkedin", "dest": "/api/linkedin.js" },
+      { "src": "/api/auth/linkedin/callback", "dest": "/api/linkedin.js" }
+    ]
+  }
