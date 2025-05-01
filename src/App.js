@@ -132,7 +132,7 @@ function App() {
 
                 https://www.linkedin.com/developers/tools/oauth/redirect
 
-                https://www.linkedin.com/oauth/v2/authorization?response_type=code&state=987654321&scope=r_liteprofile&client_id=REDACTED_LINKEDIN_CLIENT_ID&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback
+                https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=REDACTED_LINKEDIN_CLIENT_ID&redirect_uri=http://localhost:3000/callback/=r_liteprofile%20r_emailaddress
 
                 GET https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=REDACTED_LINKEDIN_CLIENT_ID&redirect_uri=https://www.linkedin.com/developers/tools/oauth/redirect&scope=liteprofile%20emailaddress%20w_member_social
 
