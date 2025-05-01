@@ -121,6 +121,7 @@ function App() {
                 </div>
               </section>
             )}
+<<<<<<< HEAD
 
             {/*
 
@@ -144,6 +145,8 @@ https://satyanthayaparan-portfolio.vercel.app/api/auth/linkedin/callback
       
 
 
+=======
+>>>>>>> parent of a6a8de8 (Implemening express API backend)
           </motion.div>
         </AnimatePresence>
       </main>
@@ -151,5 +154,3 @@ https://satyanthayaparan-portfolio.vercel.app/api/auth/linkedin/callback
   );
 }
 export default App;
-
-
