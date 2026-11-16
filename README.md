@@ -26,7 +26,12 @@ Personal portfolio site for Satyan Thayaparan — experience, projects, and cont
 npm install
 ```
 
-3. Copy any required secrets into a local `.env` (do not commit real values).
+3. Copy the env template and fill in LinkedIn credentials (`.env` is gitignored):
+
+```bash
+copy .env.example .env
+```
+
 4. Start the app:
 
 ```bash
@@ -51,4 +56,5 @@ portfolio/
 
 ## Notes
 
-- Keep API keys and mail credentials in `.env` only.
+- Keep secrets in `.env` only. Commit `.env.example`, never `.env`.
+- Rotate LinkedIn credentials if they were previously committed to git history.
