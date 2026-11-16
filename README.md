@@ -19,24 +19,33 @@ Personal portfolio site for Satyan Thayaparan — experience, projects, and cont
 
 ## Setup
 
-1. Install Node.js 18+.
-2. Install dependencies:
+1. Clone the repo and enter the project folder:
+
+```bash
+git clone https://github.com/SatyanThayaparan/portfolio.git
+cd portfolio
+```
+
+2. Install [Node.js 18+](https://nodejs.org/).
+3. Install dependencies:
 
 ```bash
 npm install
 ```
 
-3. Copy the env template and fill in LinkedIn credentials (`.env` is gitignored):
+4. Copy the env template and fill in LinkedIn credentials (`.env` is gitignored):
 
 ```bash
 copy .env.example .env
 ```
 
-4. Start the app:
+5. Start the app:
 
 ```bash
 npm start
 ```
+
+6. Open `http://localhost:3000`.
 
 ## Usage
 
@@ -51,10 +60,10 @@ portfolio/
 ├── public/
 ├── src/           # React UI
 ├── api/           # server helpers
+├── .env.example   # secret template
 └── vercel.json
 ```
 
 ## Notes
 
 - Keep secrets in `.env` only. Commit `.env.example`, never `.env`.
-- Rotate LinkedIn credentials if they were previously committed to git history.
