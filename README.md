@@ -1,21 +1,22 @@
 # Portfolio
 
-Personal portfolio site for Satyan Thayaparan — experience, projects, and contact.
+Personal portfolio for Satyan Thayaparan — Spotify-inspired “now playing” single-page site with experience, skills, projects, and about.
 
 ## Features
 
-- Animated single-page layout with section navigation
-- Home, about, resume, work, and contact sections
-- Particle background and motion accents
-- Optional API routes for contact / backend helpers
+- Dark Spotify-inspired theme with equalizer hero and player controls
+- Work experience cards with tech stacks
+- Skill bars and tools/platforms
+- Featured project cards linking to GitHub
+- About section with education and interpersonal skills
+- Responsive layout with sticky navigation
 
 ## Tech stack
 
 - React (Create React App)
 - Framer Motion
-- tsparticles
-- Express (API helpers)
-- Vercel-ready (`vercel.json`)
+- react-icons
+- Plus Jakarta Sans / JetBrains Mono
 
 ## Setup
 
@@ -33,12 +34,7 @@ cd portfolio
 npm install
 ```
 
-4. Copy the env template and fill in LinkedIn credentials (`.env` is gitignored):
-
-```bash
-copy .env.example .env
-```
-
+4. Optional: copy `.env.example` to `.env` if you use the LinkedIn API helper.
 5. Start the app:
 
 ```bash
@@ -49,21 +45,24 @@ npm start
 
 ## Usage
 
-- `npm start` — development server at `http://localhost:3000`
+- `npm start` — development server
 - `npm run build` — production build in `build/`
-- `npm test` — run tests
+- `npm run preview` is not CRA-native; use `npx serve -s build` after building
 
 ## Project structure
 
 ```text
 portfolio/
 ├── public/
-├── src/           # React UI
-├── api/           # server helpers
-├── .env.example   # secret template
+├── src/
+│   ├── App.js
+│   ├── App.css
+│   ├── data/content.js
+│   └── assets/
+├── api/           # optional LinkedIn helper
 └── vercel.json
 ```
 
 ## Notes
 
-- Keep secrets in `.env` only. Commit `.env.example`, never `.env`.
+- Keep secrets in `.env` only.

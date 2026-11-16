@@ -1,10 +1,9 @@
 {
-    "version": 2,
-    "builds": [
-      { "src": "api/linkedin.js", "use": "@vercel/node" }
-    ],
-    "routes": [
-      { "src": "/api/auth/linkedin", "dest": "/api/linkedin.js" },
-      { "src": "/api/auth/linkedin/callback", "dest": "/api/linkedin.js" }
-    ]
-  }
+  "buildCommand": "npm run vercel-build",
+  "outputDirectory": "build",
+  "rewrites": [
+    { "source": "/api/auth/linkedin", "destination": "/api/linkedin" },
+    { "source": "/api/auth/linkedin/callback", "destination": "/api/linkedin" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ]
+}
