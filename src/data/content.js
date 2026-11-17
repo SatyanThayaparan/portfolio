@@ -107,37 +107,119 @@ export const toolGroups = [
 
 export const projects = [
   {
-    title: "Discord Bot",
+    title: "Discord Music Bot",
     emoji: "🤖",
     status: "Active",
     purpose:
-      "Custom bot bringing music playback and interactive features to Discord servers with real-time user engagement",
-    stack: ["JavaScript", "Discord API", "YouTube API", "Git", "GitHub"],
+      "A Discord bot that joins voice channels and plays YouTube audio with queue, pause, skip, loop, and playlist controls.",
+    stack: ["Python", "discord.py", "yt-dlp", "FFmpeg", "python-dotenv"],
+    howItWorks: [
+      "main.py starts the Discord client and loads music/help command modules (cogs).",
+      "Play commands resolve a URL or search into a streamable track via yt-dlp.",
+      "Each server keeps its own queue so playback never crosses between guilds.",
+      "FFmpeg streams audio into voice; when a track ends, the next queued song starts.",
+    ],
+    structure: [
+      { name: "main.py", detail: "Bot entry and cog loading" },
+      { name: "music_cog.py", detail: "Search, queue, voice, and playback controls" },
+      { name: "help_cog.py", detail: "Custom help command for users" },
+    ],
     code: "https://github.com/SatyanThayaparan/discord-music-bot",
   },
   {
     title: "Movie Review Database",
     emoji: "🎬",
     purpose:
-      "Full-stack IMDb-inspired platform for discovering, searching, and reviewing movies with dynamic user interactions",
-    stack: ["Node.js", "Express.js", "MongoDB", "Pug", "Bootstrap", "JavaScript"],
+      "An IMDb-style catalogue where people browse movies, leave reviews, follow users, keep watched lists, and contributors can edit entries.",
+    stack: ["Node.js", "Express", "MongoDB", "Pug", "Bootstrap", "express-session"],
+    howItWorks: [
+      "server.js connects to MongoDB and mounts routers for movies, people, users, and auth.",
+      "Most pages fetch documents and render Pug templates on the server.",
+      "Sessions power login, reviews, follows, and watched-list actions.",
+      "Contributor routes write new or updated catalogue documents directly in MongoDB.",
+    ],
+    structure: [
+      { name: "server.js + *-router.js", detail: "HTTP entry and page/action controllers" },
+      { name: "movies.js / users.js / reviews.js", detail: "Database helpers for each collection" },
+      { name: "public/views/", detail: "Pug templates and page partials" },
+    ],
     code: "https://github.com/SatyanThayaparan/samze-movie-database",
   },
   {
     title: "Sleeper Tracker",
     emoji: "🏀",
     purpose:
-      "Streamlit draft copilot for Sleeper NBA leagues with live pick tracking and recommendation logic",
-    stack: ["Python", "Streamlit", "Sleeper API"],
+      "A Streamlit NBA draft copilot for Sleeper: live pick tracking, projection CSV import, ADP/news context, and ranked suggestions. Read-only — it never makes picks.",
+    stack: ["Python", "Streamlit", "pandas", "Sleeper API", "feedparser"],
+    howItWorks: [
+      "Enter a draft ID/URL and pull live draft state from Sleeper’s public API.",
+      "Optional projection CSV becomes the personal value baseline.",
+      "ADP and RSS headlines add market and injury/news tone.",
+      "recommend.py ranks remaining players by value, roster need, and context while the page refreshes.",
+    ],
+    structure: [
+      { name: "app.py", detail: "UI, polling, CSV intake, and news" },
+      { name: "recommend.py", detail: "Scoring and roster-need ranking" },
+      { name: "adp.py", detail: "Average Draft Position helpers" },
+    ],
     code: "https://github.com/SatyanThayaparan/sleeper-tracker",
   },
   {
     title: "LifeWrapped",
     emoji: "✦",
     purpose:
-      "Mobile-friendly activity logging app that turns everyday moments into monthly and yearly Wrapped-style recaps",
-    stack: ["HTML", "CSS", "JavaScript", "Netlify"],
+      "A personal activity logger that turns everyday minutes into monthly/yearly insights and a shareable Wrapped-style card — all on-device.",
+    stack: ["HTML", "CSS", "JavaScript", "localStorage", "Netlify"],
+    howItWorks: [
+      "Entries load from browser localStorage so there’s no backend account.",
+      "A log dialog captures category, date, minutes, and notes.",
+      "Dashboards filter by month or year to surface patterns.",
+      "Canvas code builds a shareable Wrapped PNG; JSON import/export handles backups. A React + Capacitor v2 prototype explores native packaging.",
+    ],
+    structure: [
+      { name: "app.js / index.html", detail: "Production static app logic and UI" },
+      { name: "v2/", detail: "React + Capacitor prototype of the same idea" },
+      { name: "netlify.toml", detail: "Static hosting config" },
+    ],
     code: "https://github.com/SatyanThayaparan/life-app",
+  },
+  {
+    title: "Kat Kreationz",
+    emoji: "🎀",
+    purpose:
+      "A marketing site for Kat Kreationz event décor — gallery, packages, inventory, and a Book Now inquiry flow without a backend form service.",
+    stack: ["React", "TypeScript", "Vite", "CSS", "Vercel"],
+    howItWorks: [
+      "Shared layout presents home, work, packages, inventory, and info as one scrolling site.",
+      "Most copy and offerings live in a single content file for easy updates.",
+      "Choosing a package or look prefills the booking form with useful defaults.",
+      "Validated inquiries open a mailto draft and/or copy to the clipboard for the owner.",
+    ],
+    structure: [
+      { name: "src/pages/", detail: "Marketing sections and booking/contact UI" },
+      { name: "src/data/content.ts", detail: "Editable packages, inventory, and gallery copy" },
+      { name: "src/lib/booking.ts", detail: "Prefill and inquiry message helpers" },
+    ],
+    code: "https://github.com/SatyanThayaparan/kat-kreationz",
+  },
+  {
+    title: "Anime Tracker",
+    emoji: "📺",
+    purpose:
+      "A Chrome extension that detects anime watching on supported sites, records episodes and watch time, and shows daily/weekly/monthly stats locally.",
+    stack: ["Chrome Extension MV3", "JavaScript", "chrome.storage", "chrome.idle"],
+    howItWorks: [
+      "A service worker watches the active tab and idle state so AFK time isn’t counted.",
+      "Content scripts on supported sites extract show/episode cues and send heartbeats.",
+      "Sessions are stored by date in chrome.storage.local — no remote backend.",
+      "Popup shows what’s playing now; the dashboard aggregates ranges and export options.",
+    ],
+    structure: [
+      { name: "background.js + content.js", detail: "Timing engine and page sensing" },
+      { name: "utils/", detail: "Site adapters, storage helpers, categories" },
+      { name: "popup/ + dashboard/", detail: "Quick view and deeper stats UI" },
+    ],
+    code: "https://github.com/SatyanThayaparan/anime-tracker",
   },
 ];
 

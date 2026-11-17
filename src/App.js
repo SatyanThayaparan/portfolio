@@ -414,7 +414,7 @@ export default function App() {
           <section id="projects" className="panel-section">
             <motion.div className="section-label" {...fade}>
               <h2>Projects</h2>
-              <p>Pick a project to inspect the stack and open the repo.</p>
+              <p>Pick a project for the stack, how it works, and key files.</p>
             </motion.div>
 
             <div className="album-row">
@@ -451,11 +451,39 @@ export default function App() {
                       <span key={t}>{t}</span>
                     ))}
                   </div>
-                  <div className="album-actions">
-                    <a href={selectedProject.code} target="_blank" rel="noreferrer">
-                      <PiCodeBold /> Code
-                    </a>
-                  </div>
+
+                  {selectedProject.howItWorks?.length > 0 && (
+                    <div className="project-block">
+                      <h4>How it works</h4>
+                      <ol className="project-steps">
+                        {selectedProject.howItWorks.map((step) => (
+                          <li key={step}>{step}</li>
+                        ))}
+                      </ol>
+                    </div>
+                  )}
+
+                  {selectedProject.structure?.length > 0 && (
+                    <div className="project-block">
+                      <h4>Key pieces</h4>
+                      <ul className="project-structure">
+                        {selectedProject.structure.map((piece) => (
+                          <li key={piece.name}>
+                            <code>{piece.name}</code>
+                            <span>{piece.detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {selectedProject.code && (
+                    <div className="album-actions">
+                      <a href={selectedProject.code} target="_blank" rel="noreferrer">
+                        <PiCodeBold /> Code
+                      </a>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             </AnimatePresence>
