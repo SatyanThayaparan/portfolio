@@ -25,6 +25,27 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Satyan Thayaparan — Portfolio</title>
+    <script>
+      (function () {
+        try {
+          var now = new Date();
+          var start = new Date(now.getFullYear(), 0, 0);
+          var day = Math.floor((now - start) / 86400000);
+          var decl = 23.44 * Math.sin(((2 * Math.PI) / 365) * (day - 81));
+          var lat = (45.4215 * Math.PI) / 180;
+          var declRad = (decl * Math.PI) / 180;
+          var ha = Math.acos(Math.min(1, Math.max(-1, -Math.tan(lat) * Math.tan(declRad))));
+          var daylight = (2 * ((ha * 180) / Math.PI)) / 15;
+          var sunrise = 12.2 - daylight / 2;
+          var sunset = 12.2 + daylight / 2;
+          var hour = now.getHours() + now.getMinutes() / 60;
+          document.documentElement.dataset.theme =
+            hour >= sunrise && hour < sunset ? "morning" : "night";
+        } catch (e) {
+          document.documentElement.dataset.theme = "night";
+        }
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

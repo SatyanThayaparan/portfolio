@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   PiLinkedinLogoBold,
@@ -14,6 +14,8 @@ import {
   PiStackBold,
   PiUserBold,
   PiHouseBold,
+  PiSunBold,
+  PiMoonBold,
 } from "react-icons/pi";
 import portrait from "./assets/satyan.jpeg";
 import {
@@ -29,10 +31,77 @@ import {
 import "./App.css";
 
 const spring = { type: "spring", stiffness: 320, damping: 28, mass: 0.8 };
+const OTTAWA_LAT = 45.4215;
+const ABOUT_TABS = ["bio", "education", "traits"];
 
 function scrollToId(id) {
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function slugify(value) {
+  return String(value)
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+function coverStyle(cover = []) {
+  const [a = "#122016", b = "#1ed760", c = "#0b3d22"] = cover;
+  return {
+    background: `linear-gradient(145deg, ${a} 0%, ${b} 52%, ${c} 100%)`,
+  };
+}
+
+function parseHash() {
+  const raw = window.location.hash.replace(/^#/, "").trim();
+  if (!raw) return null;
+  const [section, item] = raw.split("/");
+  if (!sections.includes(section) && section !== "hero") return null;
+  return { section, item: item || null };
+}
+
+function buildHash({ section, jobIndex, skillIndex, projectIndex, aboutTab }) {
+  if (!section || section === "hero") return "#hero";
+  if (section === "experience") {
+    const slug = experience[jobIndex]?.slug || slugify(experience[jobIndex]?.company);
+    return `#experience/${slug}`;
+  }
+  if (section === "skills") {
+    const slug = skillBars[skillIndex]?.slug || slugify(skillBars[skillIndex]?.title);
+    return `#skills/${slug}`;
+  }
+  if (section === "projects") {
+    const slug = projects[projectIndex]?.slug || slugify(projects[projectIndex]?.title);
+    return `#projects/${slug}`;
+  }
+  if (section === "about") return `#about/${aboutTab}`;
+  return `#${section}`;
+}
+
+/** Rough local sunrise/sunset (decimal hours) from latitude + day of year. */
+function getSunHours(date = new Date(), lat = OTTAWA_LAT) {
+  const start = new Date(date.getFullYear(), 0, 0);
+  const day = Math.floor((date - start) / 86400000);
+  const decl = 23.44 * Math.sin(((2 * Math.PI) / 365) * (day - 81));
+  const latRad = (lat * Math.PI) / 180;
+  const declRad = (decl * Math.PI) / 180;
+  const ha = Math.acos(
+    Math.min(1, Math.max(-1, -Math.tan(latRad) * Math.tan(declRad)))
+  );
+  const daylight = (2 * (ha * 180) / Math.PI) / 15;
+  const noon = 12.2;
+  return {
+    sunrise: noon - daylight / 2,
+    sunset: noon + daylight / 2,
+  };
+}
+
+function themeFromSun(date = new Date(), lat = OTTAWA_LAT) {
+  const { sunrise, sunset } = getSunHours(date, lat);
+  const hour = date.getHours() + date.getMinutes() / 60;
+  return hour >= sunrise && hour < sunset ? "morning" : "night";
 }
 
 function Glass({ className = "", children, ...props }) {
@@ -64,6 +133,10 @@ export default function App() {
   const [projectIndex, setProjectIndex] = useState(0);
   const [aboutTab, setAboutTab] = useState("bio");
   const [toolFilter, setToolFilter] = useState(toolGroups[0].title);
+  const [theme, setTheme] = useState(() => themeFromSun());
+  const [themeAuto, setThemeAuto] = useState(true);
+  const suppressHashRef = useRef(false);
+  const hashLockRef = useRef(0);
 
   const selectedJob = experience[jobIndex];
   const selectedSkill = skillBars[skillIndex];
@@ -75,6 +148,71 @@ export default function App() {
     [active]
   );
 
+  const writeHash = useCallback(
+    (section = active) => {
+      if (suppressHashRef.current) return;
+      const next = buildHash({
+        section,
+        jobIndex,
+        skillIndex,
+        projectIndex,
+        aboutTab,
+      });
+      if (window.location.hash === next) return;
+      window.history.replaceState(null, "", next);
+    },
+    [active, aboutTab, jobIndex, projectIndex, skillIndex]
+  );
+
+  const applyHash = useCallback((parsed, { scroll = true } = {}) => {
+    if (!parsed?.section) return;
+    const { section, item } = parsed;
+    suppressHashRef.current = true;
+    hashLockRef.current = Date.now() + 700;
+    setActive(section);
+
+    if (section === "experience" && item) {
+      const idx = experience.findIndex(
+        (job) => job.slug === item || slugify(job.company) === item || slugify(job.title) === item
+      );
+      if (idx >= 0) setJobIndex(idx);
+    }
+    if (section === "skills" && item) {
+      const idx = skillBars.findIndex(
+        (skill) => skill.slug === item || slugify(skill.title) === item
+      );
+      if (idx >= 0) setSkillIndex(idx);
+    }
+    if (section === "projects" && item) {
+      const idx = projects.findIndex(
+        (project) => project.slug === item || slugify(project.title) === item
+      );
+      if (idx >= 0) setProjectIndex(idx);
+    }
+    if (section === "about" && item && ABOUT_TABS.includes(item)) {
+      setAboutTab(item);
+    }
+
+    if (scroll) {
+      window.requestAnimationFrame(() => scrollToId(section));
+    }
+    window.setTimeout(() => {
+      suppressHashRef.current = false;
+    }, 50);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
+
+  useEffect(() => {
+    if (!themeAuto) return undefined;
+    const sync = () => setTheme(themeFromSun());
+    sync();
+    const id = window.setInterval(sync, 60_000);
+    return () => window.clearInterval(id);
+  }, [themeAuto]);
+
   useEffect(() => {
     if (!playing || reduceMotion) return undefined;
     const id = window.setInterval(() => {
@@ -84,25 +222,135 @@ export default function App() {
   }, [playing, reduceMotion]);
 
   useEffect(() => {
+    const initial = parseHash();
+    if (initial) applyHash(initial, { scroll: true });
+
+    const onHash = () => {
+      const parsed = parseHash();
+      if (parsed) applyHash(parsed, { scroll: true });
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, [applyHash]);
+
+  useEffect(() => {
+    writeHash(active);
+  }, [active, aboutTab, jobIndex, projectIndex, skillIndex, writeHash]);
+
+  useEffect(() => {
+    const pendingSection = { current: "hero" };
+    let settleTimer;
+
+    const flushSection = () => {
+      if (Date.now() < hashLockRef.current) return;
+      const next = pendingSection.current;
+      setActive((prev) => (prev === next ? prev : next));
+    };
+
+    const scheduleFlush = () => {
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(flushSection, 180);
+    };
+
     const nodes = sections.map((id) => document.getElementById(id)).filter(Boolean);
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible?.target?.id) setActive(visible.target.id);
+        if (visible?.target?.id) {
+          pendingSection.current = visible.target.id;
+          scheduleFlush();
+        }
       },
-      { rootMargin: "-30% 0px -45% 0px", threshold: [0.2, 0.45, 0.7] }
+      { rootMargin: "-22% 0px -42% 0px", threshold: [0.12, 0.28, 0.45, 0.65] }
     );
     nodes.forEach((n) => observer.observe(n));
-    return () => observer.disconnect();
+
+    const onScroll = () => {
+      const doc = document.documentElement;
+      const nearBottom = window.innerHeight + window.scrollY >= doc.scrollHeight - 80;
+      if (nearBottom) pendingSection.current = "about";
+      scheduleFlush();
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    scheduleFlush();
+
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(settleTimer);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
+
+  const toggleTheme = () => {
+    setThemeAuto(false);
+    setTheme((t) => (t === "morning" ? "night" : "morning"));
+  };
 
   const goRelative = (delta) => {
     const next = Math.min(sections.length - 1, Math.max(0, sectionIndex + delta));
-    scrollToId(sections[next]);
+    const section = sections[next];
+    hashLockRef.current = Date.now() + 700;
+    setActive(section);
+    scrollToId(section);
     setPlaying(true);
   };
+
+  const stepTrack = (delta) => {
+    if (active === "experience") {
+      setJobIndex((i) => Math.min(experience.length - 1, Math.max(0, i + delta)));
+    } else if (active === "skills") {
+      setSkillIndex((i) => Math.min(skillBars.length - 1, Math.max(0, i + delta)));
+    } else if (active === "projects") {
+      setProjectIndex((i) => Math.min(projects.length - 1, Math.max(0, i + delta)));
+    } else if (active === "about") {
+      setAboutTab((tab) => {
+        const idx = ABOUT_TABS.indexOf(tab);
+        const next = Math.min(ABOUT_TABS.length - 1, Math.max(0, idx + delta));
+        return ABOUT_TABS[next];
+      });
+    } else {
+      goRelative(delta);
+    }
+  };
+
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      const tag = event.target?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || event.target?.isContentEditable) return;
+
+      if (event.code === "Space") {
+        event.preventDefault();
+        setPlaying((v) => !v);
+        return;
+      }
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        goRelative(-1);
+        return;
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        goRelative(1);
+        return;
+      }
+      if (event.key === "ArrowUp" || event.key === "k" || event.key === "K") {
+        event.preventDefault();
+        stepTrack(-1);
+        return;
+      }
+      if (event.key === "ArrowDown" || event.key === "j" || event.key === "J") {
+        event.preventDefault();
+        stepTrack(1);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active, sectionIndex]);
 
   const fade = reduceMotion
     ? {}
@@ -137,8 +385,11 @@ export default function App() {
     })),
   ];
 
+  const activeLabel = navItems.find((n) => n.id === active)?.label || "Home";
+  const isMorning = theme === "morning";
+
   return (
-    <div className="dashboard">
+    <div className={`dashboard theme-${theme}`}>
       <div className="ambient" aria-hidden="true">
         <span className="orb orb-a" />
         <span className="orb orb-b" />
@@ -174,6 +425,31 @@ export default function App() {
             );
           })}
         </nav>
+
+        <button
+          type="button"
+          className={`theme-toggle ${themeAuto ? "auto" : "manual"}`}
+          onClick={toggleTheme}
+          onDoubleClick={(e) => {
+            e.preventDefault();
+            setThemeAuto(true);
+            setTheme(themeFromSun());
+          }}
+          aria-label={isMorning ? "Switch to night mode" : "Switch to morning mode"}
+          title={
+            themeAuto
+              ? `Auto · ${isMorning ? "Morning" : "Night"} (follows sunrise/sunset)`
+              : `Manual · ${isMorning ? "Morning" : "Night"} · double-click for auto`
+          }
+        >
+          <span className="theme-toggle-icon" aria-hidden="true">
+            {isMorning ? <PiSunBold /> : <PiMoonBold />}
+          </span>
+          <span className="theme-toggle-copy">
+            <strong>{isMorning ? "Morning" : "Night"}</strong>
+            <small>{themeAuto ? "Auto · sun sync" : "Manual"}</small>
+          </span>
+        </button>
 
         <Glass className="mini-player">
           <div className="mini-wave">
@@ -225,20 +501,47 @@ export default function App() {
       )}
 
       <div className="stage">
-        <header className="top-strip glass">
-          <div>
-            <p className="eyebrow">Satyan // Dashboard</p>
-            <h1>{navItems.find((n) => n.id === active)?.label || "Home"}</h1>
-          </div>
-          <div className="top-actions">
-            <a href={profile.github} target="_blank" rel="noreferrer" className="chip-btn">
-              <PiGithubLogoBold /> GitHub
-            </a>
-            <a href={profile.linkedIn} target="_blank" rel="noreferrer" className="chip-btn primary">
-              <PiLinkedinLogoBold /> LinkedIn
-            </a>
-          </div>
-        </header>
+        <div className="top-chrome">
+          <div className="top-veil" aria-hidden="true" />
+          <header className="top-strip glass">
+            <div className="top-title">
+              <p className="eyebrow">Satyan // Dashboard</p>
+              <div className="top-title-slot" aria-live="polite">
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.h1
+                    key={activeLabel}
+                    initial={
+                      reduceMotion
+                        ? { opacity: 1 }
+                        : { opacity: 0, y: 10, filter: "blur(6px)" }
+                    }
+                    animate={
+                      reduceMotion
+                        ? { opacity: 1 }
+                        : { opacity: 1, y: 0, filter: "blur(0px)" }
+                    }
+                    exit={
+                      reduceMotion
+                        ? { opacity: 1 }
+                        : { opacity: 0, y: -8, filter: "blur(6px)" }
+                    }
+                    transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    {activeLabel}
+                  </motion.h1>
+                </AnimatePresence>
+              </div>
+            </div>
+            <div className="top-actions">
+              <a href={profile.github} target="_blank" rel="noreferrer" className="chip-btn">
+                <PiGithubLogoBold /> GitHub
+              </a>
+              <a href={profile.linkedIn} target="_blank" rel="noreferrer" className="chip-btn primary">
+                <PiLinkedinLogoBold /> LinkedIn
+              </a>
+            </div>
+          </header>
+        </div>
 
         <main>
           <section id="hero" className="panel-section">
@@ -304,7 +607,14 @@ export default function App() {
                     type="button"
                     key={`${job.company}-${job.title}`}
                     className={`track-row ${jobIndex === index ? "active" : ""}`}
-                    onClick={() => setJobIndex(index)}
+                    onClick={() => {
+                      setJobIndex(index);
+                      window.history.replaceState(
+                        null,
+                        "",
+                        `#experience/${job.slug || slugify(job.company)}`
+                      );
+                    }}
                   >
                     <span className="idx">{String(index + 1).padStart(2, "0")}</span>
                     <span className="track-main">
@@ -365,7 +675,14 @@ export default function App() {
                     type="button"
                     key={skill.title}
                     className={`skill-pill ${skillIndex === index ? "active" : ""}`}
-                    onClick={() => setSkillIndex(index)}
+                    onClick={() => {
+                      setSkillIndex(index);
+                      window.history.replaceState(
+                        null,
+                        "",
+                        `#skills/${skill.slug || slugify(skill.title)}`
+                      );
+                    }}
                   >
                     <strong>{skill.title}</strong>
                     <span>{skill.items.length} technologies</span>
@@ -423,10 +740,22 @@ export default function App() {
                   type="button"
                   key={project.title}
                   className={`album ${projectIndex === index ? "active" : ""}`}
-                  onClick={() => setProjectIndex(index)}
+                  onClick={() => {
+                    setProjectIndex(index);
+                    window.history.replaceState(
+                      null,
+                      "",
+                      `#projects/${project.slug || slugify(project.title)}`
+                    );
+                  }}
                 >
-                  <span className="cover" aria-hidden="true">
-                    {project.emoji}
+                  <span
+                    className="cover"
+                    aria-hidden="true"
+                    style={coverStyle(project.cover)}
+                  >
+                    <span className="cover-sheen" />
+                    <span className="cover-emoji">{project.emoji}</span>
                   </span>
                   <strong>{project.title}</strong>
                   <small>{project.stack[0]}</small>
@@ -436,7 +765,12 @@ export default function App() {
 
             <AnimatePresence mode="wait">
               <motion.div key={selectedProject.title} className="album-detail glass" {...swap}>
-                <div className="album-art" aria-hidden="true">
+                <div
+                  className="album-art"
+                  aria-hidden="true"
+                  style={coverStyle(selectedProject.cover)}
+                >
+                  <span className="cover-sheen" />
                   <span className="album-emoji">{selectedProject.emoji}</span>
                   <div className="album-wave">
                     <Equalizer active={playing && !reduceMotion} bars={8} size="sm" />
@@ -489,7 +823,7 @@ export default function App() {
             </AnimatePresence>
           </section>
 
-          <section id="about" className="panel-section">
+          <section id="about" className="panel-section about-section">
             <motion.div className="section-label" {...fade}>
               <h2>About</h2>
               <p>A quick look at who I am outside the commit history.</p>
@@ -511,7 +845,10 @@ export default function App() {
                         type="button"
                         key={tab.id}
                         className={aboutTab === tab.id ? "active" : ""}
-                        onClick={() => setAboutTab(tab.id)}
+                        onClick={() => {
+                          setAboutTab(tab.id);
+                          window.history.replaceState(null, "", `#about/${tab.id}`);
+                        }}
                       >
                         {tab.label}
                       </button>
@@ -564,6 +901,13 @@ export default function App() {
 
         <footer className="footer">
           <p>© {new Date().getFullYear()} {profile.name}</p>
+          <p className="hotkeys">
+            <span>← →</span> sections
+            <span className="dot">·</span>
+            <span>J K</span> tracks
+            <span className="dot">·</span>
+            <span>Space</span> play/pause
+          </p>
         </footer>
       </div>
     </div>

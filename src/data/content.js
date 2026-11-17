@@ -16,6 +16,7 @@ export const navLinks = [
 export const experience = [
   {
     title: "Fullstack Developer",
+    slug: "fullscript",
     company: "Fullscript",
     dates: "December 2025 - Present",
     duration: "Ongoing",
@@ -29,6 +30,7 @@ export const experience = [
   },
   {
     title: "Full Stack Developer",
+    slug: "indigenous-services-canada",
     company: "Indigenous Services Canada",
     dates: "June 2024 - June 2025",
     duration: "1 year",
@@ -42,6 +44,7 @@ export const experience = [
   },
   {
     title: "Software and DevOps Engineer",
+    slug: "scenario-thales",
     company: "Scenario, A Thales Company",
     dates: "May 2019 - Aug 2019, Jan 2022 - Dec 2022",
     duration: "1+ years",
@@ -55,6 +58,7 @@ export const experience = [
   },
   {
     title: "I.T. Security Analyst",
+    slug: "shared-services-canada",
     company: "Shared Services Canada",
     dates: "April 2020 - August 2020",
     duration: "4 months",
@@ -70,18 +74,22 @@ export const experience = [
 export const skillBars = [
   {
     title: "Frontend",
+    slug: "frontend",
     items: ["React", "HTML/CSS", "JavaScript", "Angular"],
   },
   {
     title: "Backend",
+    slug: "backend",
     items: ["Node.js", "Python", "SQL", "C#"],
   },
   {
     title: "OOP",
+    slug: "oop",
     items: ["Java", "C++", "C#", "Python"],
   },
   {
     title: "Functional",
+    slug: "functional",
     items: ["JavaScript", "Haskell", "Python", "C"],
   },
 ];
@@ -108,7 +116,9 @@ export const toolGroups = [
 export const projects = [
   {
     title: "Discord Music Bot",
+    slug: "discord-music-bot",
     emoji: "🤖",
+    cover: ["#1b1338", "#5865f2", "#1ed760"],
     status: "Active",
     purpose:
       "A Discord bot that joins voice channels and plays YouTube audio with queue, pause, skip, loop, and playlist controls.",
@@ -128,7 +138,9 @@ export const projects = [
   },
   {
     title: "Movie Review Database",
+    slug: "movie-review-database",
     emoji: "🎬",
+    cover: ["#1a0f14", "#f5c518", "#e50914"],
     purpose:
       "An IMDb-style catalogue where people browse movies, leave reviews, follow users, keep watched lists, and contributors can edit entries.",
     stack: ["Node.js", "Express", "MongoDB", "Pug", "Bootstrap", "express-session"],
@@ -147,7 +159,9 @@ export const projects = [
   },
   {
     title: "Sleeper Tracker",
+    slug: "sleeper-tracker",
     emoji: "🏀",
+    cover: ["#0d1b2a", "#f77f00", "#1ed760"],
     purpose:
       "A Streamlit NBA draft copilot for Sleeper: live pick tracking, projection CSV import, ADP/news context, and ranked suggestions. Read-only — it never makes picks.",
     stack: ["Python", "Streamlit", "pandas", "Sleeper API", "feedparser"],
@@ -166,7 +180,9 @@ export const projects = [
   },
   {
     title: "LifeWrapped",
+    slug: "lifewrapped",
     emoji: "✦",
+    cover: ["#101820", "#7b61ff", "#30f07a"],
     purpose:
       "A personal activity logger that turns everyday minutes into monthly/yearly insights and a shareable Wrapped-style card — all on-device.",
     stack: ["HTML", "CSS", "JavaScript", "localStorage", "Netlify"],
@@ -185,7 +201,9 @@ export const projects = [
   },
   {
     title: "Kat Kreationz",
+    slug: "kat-kreationz",
     emoji: "🎀",
+    cover: ["#2a1220", "#ff7eb6", "#ffd6e8"],
     purpose:
       "A marketing site for Kat Kreationz event décor — gallery, packages, inventory, and a Book Now inquiry flow without a backend form service.",
     stack: ["React", "TypeScript", "Vite", "CSS", "Vercel"],
@@ -204,20 +222,21 @@ export const projects = [
   },
   {
     title: "Anime Tracker",
+    slug: "anime-tracker",
     emoji: "📺",
+    cover: ["#12081f", "#7c3aed", "#22d3ee"],
     purpose:
-      "A Chrome extension that detects anime watching on supported sites, records episodes and watch time, and shows daily/weekly/monthly stats locally.",
+      "Chrome extension that tracks anime shows, episodes, and watch time locally — with a popup and day/week/month dashboard.",
     stack: ["Chrome Extension MV3", "JavaScript", "chrome.storage", "chrome.idle"],
     howItWorks: [
-      "A service worker watches the active tab and idle state so AFK time isn’t counted.",
-      "Content scripts on supported sites extract show/episode cues and send heartbeats.",
-      "Sessions are stored by date in chrome.storage.local — no remote backend.",
-      "Popup shows what’s playing now; the dashboard aggregates ranges and export options.",
+      "Background service worker times the active tab and pauses when you’re idle.",
+      "Content script reads show/episode cues on sites like Crunchyroll and sends heartbeats.",
+      "Sessions save per day in chrome.storage.local — popup for now, dashboard for history.",
     ],
     structure: [
       { name: "background.js + content.js", detail: "Timing engine and page sensing" },
       { name: "utils/", detail: "Site adapters, storage helpers, categories" },
-      { name: "popup/ + dashboard/", detail: "Quick view and deeper stats UI" },
+      { name: "popup/ + dashboard/", detail: "Live view and longer-range stats" },
     ],
     code: "https://github.com/SatyanThayaparan/anime-tracker",
   },
