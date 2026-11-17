@@ -185,7 +185,10 @@ export default function App() {
     }
     if (section === "projects" && item) {
       const idx = projects.findIndex(
-        (project) => project.slug === item || slugify(project.title) === item
+        (project) =>
+          project.slug === item ||
+          slugify(project.title) === item ||
+          (project.aliases || []).includes(item)
       );
       if (idx >= 0) setProjectIndex(idx);
     }
@@ -752,10 +755,16 @@ export default function App() {
                   <span
                     className="cover"
                     aria-hidden="true"
-                    style={coverStyle(project.cover)}
+                    style={project.coverImage ? undefined : coverStyle(project.cover)}
                   >
-                    <span className="cover-sheen" />
-                    <span className="cover-emoji">{project.emoji}</span>
+                    {project.coverImage ? (
+                      <img className="cover-image" src={project.coverImage} alt="" />
+                    ) : (
+                      <>
+                        <span className="cover-sheen" />
+                        <span className="cover-emoji">{project.emoji}</span>
+                      </>
+                    )}
                   </span>
                   <strong>{project.title}</strong>
                   <small>{project.stack[0]}</small>
@@ -766,12 +775,24 @@ export default function App() {
             <AnimatePresence mode="wait">
               <motion.div key={selectedProject.title} className="album-detail glass" {...swap}>
                 <div
-                  className="album-art"
+                  className={`album-art${selectedProject.coverImage ? " has-cover-image" : ""}`}
                   aria-hidden="true"
-                  style={coverStyle(selectedProject.cover)}
+                  style={
+                    selectedProject.coverImage ? undefined : coverStyle(selectedProject.cover)
+                  }
                 >
-                  <span className="cover-sheen" />
-                  <span className="album-emoji">{selectedProject.emoji}</span>
+                  {selectedProject.coverImage ? (
+                    <img
+                      className="album-cover-image"
+                      src={selectedProject.coverImage}
+                      alt=""
+                    />
+                  ) : (
+                    <>
+                      <span className="cover-sheen" />
+                      <span className="album-emoji">{selectedProject.emoji}</span>
+                    </>
+                  )}
                   <div className="album-wave">
                     <Equalizer active={playing && !reduceMotion} bars={8} size="sm" />
                   </div>
