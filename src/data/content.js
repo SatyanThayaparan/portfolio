@@ -180,6 +180,7 @@ export const projects = [
       { name: "recommend.py", detail: "Scoring and roster-need ranking" },
       { name: "adp.py", detail: "Average Draft Position helpers" },
     ],
+    demo: "https://satyanthayaparan-sleeper-tracker-app-pmaj1x.streamlit.app",
     code: "https://github.com/SatyanThayaparan/sleeper-tracker",
   },
   {

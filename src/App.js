@@ -832,11 +832,18 @@ export default function App() {
                     </div>
                   )}
 
-                  {selectedProject.code && (
+                  {(selectedProject.demo || selectedProject.code) && (
                     <div className="album-actions">
-                      <a href={selectedProject.code} target="_blank" rel="noreferrer">
-                        <PiCodeBold /> Code
-                      </a>
+                      {selectedProject.demo && (
+                        <a href={selectedProject.demo} target="_blank" rel="noreferrer">
+                          Live demo
+                        </a>
+                      )}
+                      {selectedProject.code && (
+                        <a href={selectedProject.code} target="_blank" rel="noreferrer">
+                          <PiCodeBold /> Code
+                        </a>
+                      )}
                     </div>
                   )}
                 </div>
