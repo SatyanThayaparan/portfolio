@@ -799,7 +799,7 @@ export default function App() {
                 </div>
                 <div className="album-copy">
                   {selectedProject.status && <span className="status">{selectedProject.status}</span>}
-                  <h3>{selectedProject.title}</h3>
+                  <h3>{selectedProject.detailTitle || selectedProject.title}</h3>
                   <p>{selectedProject.purpose}</p>
                   <div className="chip-wrap">
                     {selectedProject.stack.map((t) => (

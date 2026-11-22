@@ -142,6 +142,7 @@ export const projects = [
   },
   {
     title: "Samze",
+    detailTitle: "Samze Movie Reviews",
     slug: "samze",
     aliases: ["movie-review-database", "samze-movie-database"],
     emoji: "🎬",
