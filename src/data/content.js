@@ -166,7 +166,7 @@ export const projects = [
     slug: "picky",
     aliases: ["sleeper-tracker", "picky", "sleeper"],
     emoji: "🎲",
-    coverImage: "/projects/picky-icon.png",
+    coverImage: "/projects/picky-icon-green.svg",
     cover: ["#10151F", "#1B2432", "#38B979"],
     status: "Active",
     purpose:
